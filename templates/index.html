@@ -1,0 +1,122 @@
+{% extends 'component/base.html' %}
+
+{% block content %}
+
+<section class="hero-section">
+  <div class="row" style="padding: 15% 5% 5% 10%;">
+    <div class="col-md-6 d-flex align-items-center">
+      <div>
+        <h1 style="font-weight: bold; color: #000000!important;;"><span
+            style="font-weight: bold; color: #26a5c5!important;;">Kita</span>sama</h1>
+        <p class="lead text-muted">
+          Sistem pembelajaran inovatif untuk siswa tunarungu. Mengubah suara menjadi teks untuk menyederhanakan proses pembelajaran, membuka akses penuh terhadap pengetahuan.
+        </p>
+        <a href="{{url_for('speech')}}" class="btn btn-lg mt-3" style="background-color: #26a5c5!important; color: white;" data-bs-toggle="modal" data-bs-target="#exampleModal"><i
+            class="fa-solid fa-microphone-lines"></i>&nbsp; Start Learning</a>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <img src="{{ url_for('static', filename='img/icon-hero.svg') }}" alt="Icon" class="img-fluid">
+    </div>
+  </div>
+</section>
+
+<section class="features" style="margin-top: 13%;">
+  <div class="container">
+    <h1 class="text-center mb-5" style="font-weight: bold; color: #000000!important;;"><span
+        style="font-weight: bold; color: #26a5c5!important;">Our</span> Features</h1>
+    <div class="row justify-content-center">
+      <div class="col-md-4 text-center">
+        <img src="{{ url_for('static', filename='img/speech-to-text.png') }}" alt="" class="img-fluid mb-3" width="20%">
+        <h3 style="font-weight: bold; color: #26a5c5!important;">Speech to Text</h3>
+      </div>
+      <div class="col-md-4 text-center">
+        <img src="{{ url_for('static', filename='img/live.png') }}" alt="" class="img-fluid mb-3" width="20%">
+        <h3 style="font-weight: bold; color: #26a5c5!important;">Gesture Live</h3>
+      </div>
+      <div class="col-md-4 text-center">
+        <img src="{{ url_for('static', filename='img/pdf-download.png') }}" alt="" class="img-fluid mb-3" width="20%">
+        <h3 style="font-weight: bold; color: #26a5c5!important;">Download Text</h3>
+      </div>
+    </div>
+    <hr class="my-5">
+  </div>
+</section>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+       <h4>Pilih Camera</h3>
+      <p class="lead text-muted"></h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form onsubmit="return startCamera();">
+          <div class="mb-3">
+            <label for="cameraSelect" class="form-label">Select Kamera</label>
+            <select class="form-select" id="cameraSelect" aria-label="Default select example" required onchange="showHideIPCameraForm()">
+              <option selected value="">-- Open this select menu --</option>
+              <option value="Internal Camera">Internal Camera</option>
+              <option value="External Camera">External Camera</option>
+            </select>
+          </div>
+          <div class="mb-3" id="ipCameraForm" style="display: none;">
+            <label for="exampleFormControlInput1" class="form-label">IP Camera</label>
+            <input type="text" class="form-control" id="exampleFormControlInput1" name="ipCameraAddress" placeholder="IP Camera">
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-lg mt-3" style="background-color: #26a5c5!important; color: white;"><i class="fa-solid fa-play"></i>&nbsp; Start</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  function showHideIPCameraForm() {
+    var cameraSelect = document.getElementById("cameraSelect");
+    var ipCameraForm = document.getElementById("ipCameraForm");
+
+    if (cameraSelect.value === "External Camera") {
+      ipCameraForm.style.display = "block";
+    } else {
+      ipCameraForm.style.display = "none";
+    }
+  }
+</script>
+
+<script>
+  function startCamera() {
+      var cameraSelect = document.getElementById("cameraSelect");
+      var ipCameraAddressInput = document.getElementById("exampleFormControlInput1");
+      var cameraInfo = "";
+      var ipCameraAddress = "";
+
+      if (cameraSelect.value === "Internal Camera") {
+          cameraInfo = "internal";
+          window.location.href = "/speech?camera=" + cameraInfo;
+      } else if (cameraSelect.value === "External Camera") {
+          cameraInfo = "external";
+          ipCameraAddress = ipCameraAddressInput.value.trim();
+          if (ipCameraAddress === "") {
+              swal("Peringatan!", "Silakan masukkan alamat IP Kamera untuk kamera eksternal.", "warning");
+              return false;
+          }
+          window.location.href = "/speech?camera=" + cameraInfo + "&ipCamera=" + ipCameraAddress;
+      } else {
+          alert("Silakan pilih kamera.");
+          return false;
+      }
+
+      // Cegah formulir untuk benar-benar dikirim
+      return false;
+  }
+</script>
+
+
+
+{% endblock %}
