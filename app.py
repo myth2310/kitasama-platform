@@ -43,9 +43,11 @@ def generate_audio():
     # Panggil source.__exit__() secara manual setelah loop selesai
     source.__exit__(None, None, None)  # agar hasil transkrip sebelumnya tetap ada
 
+
+#Landing Page
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('landing-page/index.html')
 
 @app.route('/speech')
 def speech():
@@ -54,6 +56,37 @@ def speech():
 @app.route('/stream')
 def stream():
     return Response(generate_audio(), content_type='text/event-stream')
+
+
+#Dashboard
+@app.route('/dashboard')
+def dashboard():
+    page = 'Dashboard'
+    return render_template('dashboard/index.html',page=page)
+
+@app.route('/users')
+def users():
+    page = 'Users'
+    return render_template('dashboard/users-page.html',page=page)
+
+@app.route('/artikel')
+def artikel():
+    page = 'Artikel'
+    return render_template('dashboard/artikel-page.html',page=page)
+
+@app.route('/speech-live')
+def speechLive():
+    page = 'Speech'
+    return render_template('dashboard/speech-page.html',page=page)
+
+#Auth
+@app.route('/sign-in')
+def signIn():
+    return render_template('sign-in.html')
+
+@app.route('/sign-up')
+def signUp():
+    return render_template('sign-up.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
